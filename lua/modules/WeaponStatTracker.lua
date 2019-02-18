@@ -4,13 +4,14 @@ include("PlayerStats.lua")
 
 function WeaponStatTracker()
 
-  -- Class For tracking
+  -- Class-Attributes
   local self = {
-    playerTable = {}, -- list of players, and a list of stats per player
-    timer = nil,
-    timeoutIterations = 0
+    playerTable = {}, -- list of players, containing a list of stat objects
+    timer = nil, -- to iterate at a constant interval checking if each player has pending changes. If so--commit them.
+    timeoutIterations = 0 -- to be used in handling how many iterations to check (maybe on a timer?) before queuing data commits
   }
 
+  -- Resolves a stat object per a provided player ent. Generates one if it does not exist.
   local function getPlayerStatObject(ply)
 
     local steamID64 = ply:SteamID64()
@@ -25,6 +26,7 @@ function WeaponStatTracker()
 
   end
 
+  -- Binds a function handling a hook (triggered when a player fires bullets from a weapon/ent)
   local function bindEntityFireBullets()
     -- preAmble
     local function handleEntityFireBullets (ent, dt)
@@ -40,6 +42,7 @@ function WeaponStatTracker()
 
   end
 
+  -- Binds a function handling a hook (triggered when a player takes damage)
   local function bindScalePlayerDamage()
 
     local function handleScalePlayerDamage ( ply, hitGroup, dmgInfo )
@@ -58,6 +61,7 @@ function WeaponStatTracker()
 
   end
 
+  -- Calls the tostring method of the 'PlayerStat' object returned from getPlayerStatObject
   function self.getWeaponStats(ply)
 
     local p = getPlayerStatObject(ply)
@@ -66,6 +70,7 @@ function WeaponStatTracker()
 
   end
 
+  -- Init the binds when we generate an instance of the tracker-class
   bindEntityFireBullets()
   bindScalePlayerDamage()
 

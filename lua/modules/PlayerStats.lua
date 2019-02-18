@@ -10,6 +10,7 @@ function PlayerStats(ply)
 
   self.steamID = ply:SteamID64()
 
+  -- Gets the 'stat' object instantiated for the player. Creates one if it does not exist
   local function getStatObject(weaponName)
 
     local stat = nil
@@ -24,10 +25,12 @@ function PlayerStats(ply)
 
   end
 
+  -- Returns a generic object of all 'stat' objects for the player
   local function getStats()
     return self.statsTable;
   end
 
+  -- Parses the PlayerStats object to a prettified JSON string
   function self.tostring()
     return table.ToString(self, self.steamID .. "WT -- Stats: ", true)
   end
@@ -42,6 +45,7 @@ function PlayerStats(ply)
 
   end
 
+  -- Get the stat object for the provided weapon, and increment the hitgroup count on-hhit
   function self.handleWeaponHit(weaponName, hitGroup)
 
     local stat = getStatObject(weaponName)
@@ -57,5 +61,6 @@ function PlayerStats(ply)
     self.pendingCommit = false
   end
 
+  -- Return a new instance of the object
   return self
 end

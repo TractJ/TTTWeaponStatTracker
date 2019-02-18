@@ -8,6 +8,7 @@ wTrack = WeaponStatTracker()
 ---------------
 -- DEBUGGING --
 ---------------
+-- This will be removed in the future upon release
 concommand.Add("WeaponStats_getMyStats", function(ply, cmd, args)
 
   print(wTrack.getWeaponStats(ply))
