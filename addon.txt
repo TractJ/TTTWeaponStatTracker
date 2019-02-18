@@ -1,0 +1,7 @@
+"AddonInfo"
+{
+	"name"            "WeapoonStatTracker"
+	"version"         "1"
+	"up_date"         "02/12/2019"
+	"author_name"     "TractJ"
+}
