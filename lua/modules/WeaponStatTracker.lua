@@ -2,7 +2,7 @@ include("PlayerStats.lua")
 
 -- Weapon Tracker (General Class)
 
-function WeaponTracker()
+function WeaponStatTracker()
 
   -- Class For tracking
   local self = {
