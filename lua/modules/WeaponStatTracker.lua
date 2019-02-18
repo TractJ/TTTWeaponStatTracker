@@ -6,9 +6,7 @@ function WeaponStatTracker()
 
   -- Class-Attributes
   local self = {
-    playerTable = {}, -- list of players, containing a list of stat objects
-    timer = nil, -- to iterate at a constant interval checking if each player has pending changes. If so--commit them.
-    timeoutIterations = 0 -- to be used in handling how many iterations to check (maybe on a timer?) before queuing data commits
+    playerTable = {} -- list of players, containing a list of stat objects
   }
 
   -- Resolves a stat object per a provided player ent. Generates one if it does not exist.
