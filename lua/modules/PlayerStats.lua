@@ -2,44 +2,66 @@ include("Stats.lua")
 
 local CONSTANTS = {
   sql = {
-    insertPlayer = [[
-      INSERT into tblWTPlayers (playerID, allowTracking) SELECT $PARAM1, $PARAM2
-      EXCEPT
-      SELECT playerID, allowTracking FROM tblWTPlayers WHERE playerID=$PARAM1;
-    ]]
+    insertPlayer = "INSERT into tblWTPlayers (steamId) VALUES ('$STEAMID')",
+    toggleTracking = "UPDATE tblWTPlayers SET allowTracking = (1 - allowTracking) WHERE steamID = $STEAMID;",
+    getPlayer = "SELECT * FROM tblWTPlayers WHERE steamID = '$STEAMID'"
   }
 }
 
-function PlayerStats(ply, canTrack, isDebug)
+function PlayerStats(ply)
 
   local self = {
     statsTable = {}, -- A collection of stats-objects per-weapon for a player
     pendingCommit = false,
-    steamID = "",
-    isDebug = false
+    steamID = ply:SteamID64(),
+    allowTracking = true
   }
 
-  if (options ~= nil && isDebug == true)then
+  local function qryInsertPlayer()
 
-    self.isDebug = true
+    return sql.Query(CONSTANTS.sql.insertPlayer:gsub("$STEAMID", self.steamID)) ~= false
 
   end
 
-  self.steamID = ply:SteamID64()
+  local function qryToggleTracking()
 
-  local function preInitFunc()
+    return sql.Query(CONSTANTS.sql.toggleTracking:gsub("$STEAMID", self.steamID)) ~= false
 
-    local param1 = self.steamID
+  end
 
-    local param2 = true
+  local function qryGetPlayer()
 
-    if (canTrack ~= nil && type(canTrack) == "boolean") then
-      param2 = canTrack
+    return sql.Query(CONSTANTS.Sql.getPlayer)
+
+  end
+
+  local function getPlayer()
+
+    local existingPly = qryGetPlayer()
+
+    if (!existingStat) then
+
+      if (qryInsertPlayer() ~= false) then
+
+        existingStat = qryGetPlayer()
+
+      else
+
+        existingStat = {CONSTANTS.classDefaults}
+
+      end
+
     end
 
-    local sSql = CONSTANTS.sql.insertPlayer:gsub("$PARAM1", param1):gsub("$PARAM2", param2)
-    sql.Query(sSql)
+    return existingPly[0]
 
+  end
+
+  local function init()
+
+    local this = getPlayer()
+
+    self.allowTracking = this.allowTracking
 
   end
 
@@ -49,7 +71,7 @@ function PlayerStats(ply, canTrack, isDebug)
     local stat = nil
 
     if (self.statsTable[weaponName] == nil) then
-      self.statsTable[weaponName] = Stats(weaponName)
+      self.statsTable[weaponName] = Stats(weaponName, self.steamID)
     end
 
     stat = self.statsTable[weaponName]
@@ -63,12 +85,17 @@ function PlayerStats(ply, canTrack, isDebug)
     return self.statsTable;
   end
 
-  function commitChanges ()
+  function self.commitChanges ()
 
-    -- TODO - Insert table data here.
+    if (self.pendingCommit) then
 
+      -- Loop through the stat objects and commit changes
+      self.pendingCommit = false
 
-    self.pendingCommit = false
+    end
+
+    self.pendingCommit = ~self.pendingCommit
+
   end
 
   -- Parses the PlayerStats object to a prettified JSON string

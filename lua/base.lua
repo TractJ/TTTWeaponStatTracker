@@ -5,15 +5,15 @@ local CONSTANTS = {
   sql = {
     reupPlayers = [[
       CREATE TABLE IF NOT EXISTS tblWTPlayers(
-      playerID INT PRIMARY KEY,
-      allowTracking INT NOT NULL DEFAULT 1,
-      createdAt DATETIME DEFAULT current_timestamp,
-      updatedAt DATETIME DEFAULT current_timestamp
-    );]],
+       steamID TEXT PRIMARY KEY,
+       allowTracking INT NOT NULL DEFAULT 1,
+       createdAt DATETIME DEFAULT current_timestamp,
+       updatedAt DATETIME DEFAULT current_timestamp
+      );
+    ]],
     reupStats = [[
       CREATE TABLE IF NOT EXISTS tblWTPlayerStats(
-        statID INT PRIMARY KEY,
-        playerID TEXT NOT NULL,
+        steamID TEXT NOT NULL,
         weaponName TEXT NOT NULL,
         fireCount INT DEFAULT 0,
         headHits INT DEFAULT 0,
@@ -23,7 +23,8 @@ local CONSTANTS = {
         rightarmHits INT DEFAULT 0,
         leftlegHits INT DEFAULT 0,
         rightlegHits INT DEFAULT 0,
-        genericHits INT DEFAULT 0
+        genericHits INT DEFAULT 0,
+        PRIMARY KEY (steamID, weaponName)
       );
     ]]
   }
