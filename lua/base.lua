@@ -30,12 +30,12 @@ local CONSTANTS = {
   }
 }
 
-local init()
+local function init()
   sql.Query(CONSTANTS.sql.reupPlayers);
   sql.Query(CONSTANTS.sql.reupStats);
 end
 
-local handleCommitTimerTick(trackObj)
+local function handleCommitTimerTick(trackObj)
 
   -- Handle functions for WeaponStatTracker class here.
 
@@ -46,7 +46,7 @@ local handleCommitTimerTick(trackObj)
 
 end
 
-local generateCommitTimer(name, trackObj)
+local function generateCommitTimer(name, trackObj)
 
   timer.Create(name, CONSTANTS.timerTickRateS, 0, function() handleCommitTimerTick(trackObj) end)
 
@@ -62,7 +62,7 @@ init()
 wTrack = WeaponStatTracker()
 
 -- Create a timer to handle the WeaponStatTracker object's methods (comitting changes)
-generateCommitTimer(wTrack)
+generateCommitTimer("GlobalCommitTimer", wTrack)
 
 ---------------
 -- DEBUGGING --

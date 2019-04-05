@@ -39,15 +39,15 @@ function PlayerStats(ply)
 
     local existingPly = qryGetPlayer()
 
-    if (!existingStat) then
+    if (!existingPly) then
 
       if (qryInsertPlayer() ~= false) then
 
-        existingStat = qryGetPlayer()
+        existingPly = qryGetPlayer()
 
       else
 
-        existingStat = {CONSTANTS.classDefaults}
+        existingPly = {CONSTANTS.classDefaults}
 
       end
 
@@ -94,7 +94,7 @@ function PlayerStats(ply)
 
     end
 
-    self.pendingCommit = ~self.pendingCommit
+    self.pendingCommit = !self.pendingCommit
 
   end
 

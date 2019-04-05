@@ -39,24 +39,28 @@ function Stats (weaponName, steamID)
   self.weaponName = weaponName
   self.steamID = steamID
 
+  -- (LDB) Inserts a stat-object
   local function qryInsertStat()
 
     return sql.Query(CONSTANTS.sql.insertStat:gsub("$STEAMID", self.steamID):gsub("$WEAPONNAME", self.weaponName)) ~= false
 
   end
 
+  -- (LDB) Updates a stat object
   local function qryUpdateStat(field, fieldVal)
 
     return sql.Query(CONSTANTS.sql.updateStat:gsub("$STEAMID", self.steamID):gsub("$WEAPONNAME", self.weaponName):gsub("$FIELD", field):gsub("$FIELDVAL", fieldVal)) ~= false
 
   end
 
+  -- (LDB) gets a stat object
   local function qryGetStat()
 
-    return sql.Query(CONSTANTS.Sql.getStat:gsub("$STEAMID", self.steamID):gsub("$WEAPONNAME", self.weaponName))
+    return sql.Query(CONSTANTS.sql.getStat:gsub("$STEAMID", self.steamID):gsub("$WEAPONNAME", self.weaponName))
 
   end
 
+  -- Gets a stat object to read, generates one if it doesn't exist
   local function getStat()
 
     local existingStat = qryGetStat()
@@ -75,7 +79,7 @@ function Stats (weaponName, steamID)
 
     end
 
-    return existingStat[0]
+    return existingStat
 
   end
 
