@@ -34,7 +34,7 @@ local CONSTANTS = {
 
 function Stats (weaponName, steamID)
 
-  local self = CONSTANTS.classDefaults
+  local self = table.Copy(CONSTANTS.classDefaults)
 
   self.weaponName = weaponName
   self.steamID = steamID
@@ -103,6 +103,11 @@ function Stats (weaponName, steamID)
     self = targetFromSrc(getStat(), this)
 
   end
+
+  function self.tostring()
+    return table.ToString(self, self.steamID .. " - " .. self.weaponName .. " - WT -- Stats: ", true)
+  end
+
 
   function self.commitChanges()
 
@@ -185,6 +190,10 @@ function Stats (weaponName, steamID)
   end
 
   init()
+
+  print("Returing stats...")
+  print(self.tostring(self))
+  print("")
 
   -- Return a new instance of the stat object
   return self

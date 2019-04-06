@@ -53,7 +53,7 @@ function PlayerStats(ply)
 
     end
 
-    return existingPly[0]
+    return existingPly
 
   end
 
@@ -71,10 +71,15 @@ function PlayerStats(ply)
     local stat = nil
 
     if (self.statsTable[weaponName] == nil) then
+      print("Stat doesnt exist for")
+      print("weaponName")
       self.statsTable[weaponName] = Stats(weaponName, self.steamID)
     end
 
     stat = self.statsTable[weaponName]
+
+    print("getStatObject")
+    print(stat.tostring())
 
     return stat;
 
